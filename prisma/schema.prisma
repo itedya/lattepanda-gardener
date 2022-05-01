@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model ArduinoConfiguration {
+  id             Int      @id @default(autoincrement())
+  serialportPath String
+  friendlyName   String
+  pinouts        Pinout[]
+}
+
+model Pinout {
+  id                     Int                   @id @default(autoincrement())
+  sensorPin              Int
+  valvePin               Int
+  ArduinoConfiguration   ArduinoConfiguration? @relation(fields: [arduinoConfigurationId], references: [id])
+  arduinoConfigurationId Int?
+}
