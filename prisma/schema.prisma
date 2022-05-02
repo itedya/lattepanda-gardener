@@ -9,8 +9,8 @@ datasource db {
 
 model ArduinoConfiguration {
   id             Int      @id @default(autoincrement())
-  serialportPath String
-  friendlyName   String
+  name           String
+  serialport     String
   pinouts        Pinout[]
 }
 

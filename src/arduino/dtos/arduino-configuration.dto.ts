@@ -2,11 +2,14 @@ import { PinoutDto } from "./pinout.dto";
 
 export class ArduinoConfigurationDto {
   constructor(data: Partial<ArduinoConfigurationDto>) {
-    Object.assign(this, data)
+    if (data.id) this.id = data.id;
+    if (data.name) this.name = data.name;
+    if (data.serialport) this.serialport = data.serialport;
+    if (data.pinouts) this.pinouts = data.pinouts;
   }
 
   id: number;
-  serialportPath: string;
-  friendlyName: string;
+  name: string;
+  serialport: string;
   pinouts: PinoutDto[];
 }
