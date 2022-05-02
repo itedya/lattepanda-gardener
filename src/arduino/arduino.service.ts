@@ -34,4 +34,12 @@ export class ArduinoService {
 
     return new PinoutDto(result);
   }
+
+  async all() {
+    const result = await this.prismaService.arduinoConfiguration.findMany({});
+
+    if (result === null) return null;
+
+    return result.map(ele => new ArduinoConfigurationDto(ele));
+  }
 }
