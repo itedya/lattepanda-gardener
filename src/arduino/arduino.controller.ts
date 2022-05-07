@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import {Body, Controller, Get, Post, Put} from "@nestjs/common";
 import { ArduinoService } from "./arduino.service";
-import { CreateArduinoConfigurationDto } from "./dtos/create-arduino-configuration.dto";
+import {CreateArduinoConfigurationDto} from "./dtos/create-arduino-configuration.dto";
 
 @Controller("/api/arduino")
 export class ArduinoController {

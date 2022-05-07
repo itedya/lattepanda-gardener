@@ -7,6 +7,8 @@ export class SerialportService {
   async getCOMPortList(): Promise<SerialportDto[]> {
     const result = await SerialPort.list();
 
-    return result.map(ele => new SerialportDto(ele));
+    return result
+        .filter(ele => !! ele.serialNumber)
+        .map(ele => new SerialportDto(ele));
   }
 }

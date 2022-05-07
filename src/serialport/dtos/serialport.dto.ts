@@ -1,9 +1,11 @@
 export class SerialportDto {
   constructor(data: Partial<SerialportDto>) {
-    this.path = data.path;
-    this.friendlyName = data.friendlyName;
+    if (data.path) this.path = data.path;
+    if (data.friendlyName) this.friendlyName = data.friendlyName;
+    if (data.vendorId) this.vendorId = data.vendorId
   }
 
-  path: String;
+  vendorId: string;
+  path: string;
   friendlyName: String;
 }

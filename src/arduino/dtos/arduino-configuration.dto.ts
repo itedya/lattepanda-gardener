@@ -11,5 +11,5 @@ export class ArduinoConfigurationDto {
   id: number;
   name: string;
   serialport: string;
-  pinouts: PinoutDto[];
+  pinouts: PinoutDto[] = [];
 }

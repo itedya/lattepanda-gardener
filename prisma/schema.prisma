@@ -8,10 +8,10 @@ datasource db {
 }
 
 model ArduinoConfiguration {
-  id             Int      @id @default(autoincrement())
-  name           String
-  serialport     String
-  pinouts        Pinout[]
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+  serialport String   @unique
+  pinouts    Pinout[]
 }
 
 model Pinout {
@@ -19,5 +19,5 @@ model Pinout {
   sensorPin              Int
   valvePin               Int
   ArduinoConfiguration   ArduinoConfiguration? @relation(fields: [arduinoConfigurationId], references: [id])
-  arduinoConfigurationId Int?
+  arduinoConfigurationId Int?                  @unique
 }

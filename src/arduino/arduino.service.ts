@@ -1,45 +1,63 @@
-import { Injectable } from "@nestjs/common";
-import { CreateArduinoConfigurationDto } from "./dtos/create-arduino-configuration.dto";
-import { PrismaService } from "../prisma/prisma.service";
-import { CreatePinoutDto } from "./dtos/create-pinout.dto";
-import { PinoutDto } from "./dtos/pinout.dto";
-import { ArduinoConfigurationDto } from "./dtos/arduino-configuration.dto";
+import {Injectable} from "@nestjs/common";
+import {CreateArduinoConfigurationDto} from "./dtos/create-arduino-configuration.dto";
+import {PrismaService} from "../prisma/prisma.service";
+import {CreatePinoutDto} from "./dtos/create-pinout.dto";
+import {PinoutDto} from "./dtos/pinout.dto";
+import {ArduinoConfigurationDto} from "./dtos/arduino-configuration.dto";
+import {doesNotReject} from "assert";
+import {
+    ArduinoConfigurationNameIsNotUniqueException
+} from "./exceptions/arduino-configuration-name-is-not-unique.exception";
+import {
+    ArduinoConfigurationSerialportIsNotUniqueException
+} from "./exceptions/arduino-configuration-serialport-is-not-unique.exception";
 
 @Injectable()
 export class ArduinoService {
-  constructor(private prismaService: PrismaService) {
-  }
-
-  async create(data: CreateArduinoConfigurationDto) {
-    const result = await this.prismaService.arduinoConfiguration.create({ data });
-
-    const dto = new ArduinoConfigurationDto(result);
-
-    const pinouts: CreatePinoutDto[] = data.pinouts.map(ele => new CreatePinoutDto({
-      ...ele,
-      arduinoConfigurationId: result.id
-    }));
-
-    for (const pinout of pinouts) {
-      dto.pinouts.push(await this.createPinout(pinout));
+    constructor(private prismaService: PrismaService) {
     }
 
-    return dto;
-  }
+    async create(data: CreateArduinoConfigurationDto) {
+        const result = await this.prismaService.arduinoConfiguration.create({
+            data: {
+                name: data.name,
+                serialport: data.serialport,
+            }
+        })
+            .catch(err => {
+                if (ArduinoConfigurationNameIsNotUniqueException.isInstanceOf(err)) {
+                    throw new ArduinoConfigurationNameIsNotUniqueException();
+                } else if (ArduinoConfigurationSerialportIsNotUniqueException.isInstanceOf(err)) {
+                    throw new ArduinoConfigurationSerialportIsNotUniqueException();
+                }
 
-  async createPinout(dto: CreatePinoutDto) {
-    const result = await this.prismaService.pinout.create({ data: dto });
+                throw err;
+            });
 
-    if (result == null) return null;
+        const arduinoDto = new ArduinoConfigurationDto(result);
 
-    return new PinoutDto(result);
-  }
+        for (const payload of data.pinouts) {
+            const pinout = await this.createPinout(payload, result.id);
 
-  async all() {
-    const result = await this.prismaService.arduinoConfiguration.findMany({});
+            arduinoDto.pinouts.push(pinout);
+        }
 
-    if (result === null) return null;
+        return new ArduinoConfigurationDto(result);
+    }
 
-    return result.map(ele => new ArduinoConfigurationDto(ele));
-  }
+    async createPinout(dto: CreatePinoutDto, arduinoConfigurationId: number) {
+        const result = await this.prismaService.pinout.create({data: {...dto, arduinoConfigurationId}});
+
+        if (result == null) return null;
+
+        return new PinoutDto(result);
+    }
+
+    async all() {
+        const result = await this.prismaService.arduinoConfiguration.findMany({});
+
+        if (result === null) return null;
+
+        return result.map(ele => new ArduinoConfigurationDto(ele));
+    }
 }

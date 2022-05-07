@@ -1,5 +1,11 @@
-import { OmitType } from "@nestjs/mapped-types";
-import { PinoutDto } from "./pinout.dto";
+import {IsNotEmpty, IsNumber} from "class-validator";
 
-export class CreatePinoutDto extends OmitType(PinoutDto, ["id"] as const) {
+export class CreatePinoutDto {
+    @IsNotEmpty()
+    @IsNumber()
+    valvePin: number;
+
+    @IsNotEmpty()
+    @IsNumber()
+    sensorPin: number;
 }
