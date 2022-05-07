@@ -4,13 +4,16 @@ import {PrismaService} from "../prisma/prisma.service";
 import {CreatePinoutDto} from "./dtos/create-pinout.dto";
 import {PinoutDto} from "./dtos/pinout.dto";
 import {ArduinoConfigurationDto} from "./dtos/arduino-configuration.dto";
-import {doesNotReject} from "assert";
 import {
     ArduinoConfigurationNameIsNotUniqueException
 } from "./exceptions/arduino-configuration-name-is-not-unique.exception";
 import {
     ArduinoConfigurationSerialportIsNotUniqueException
 } from "./exceptions/arduino-configuration-serialport-is-not-unique.exception";
+import {UpdateArduinoConfigurationDto} from "./dtos/update-arduino-configuration.dto";
+import {
+    ArduinoConfigurationWithThatIdDoesNotExist
+} from "./exceptions/arduino-configuration-with-that-id-does-not-exist";
 
 @Injectable()
 export class ArduinoService {
@@ -42,7 +45,7 @@ export class ArduinoService {
             arduinoDto.pinouts.push(pinout);
         }
 
-        return new ArduinoConfigurationDto(result);
+        return arduinoDto
     }
 
     async createPinout(dto: CreatePinoutDto, arduinoConfigurationId: number) {
@@ -51,6 +54,44 @@ export class ArduinoService {
         if (result == null) return null;
 
         return new PinoutDto(result);
+    }
+
+    async update(dto: UpdateArduinoConfigurationDto) {
+        await this.removePinoutsForId(dto.id);
+
+        const arduinoDto = await this.prismaService.arduinoConfiguration.update({
+            where: { id: dto.id },
+            data: {
+                name: dto.name,
+                serialport: dto.serialport
+            }
+        })
+            .then(res => new ArduinoConfigurationDto(res))
+            .catch(err => {
+                if (ArduinoConfigurationWithThatIdDoesNotExist.isInstanceOf(err)) {
+                    throw new ArduinoConfigurationWithThatIdDoesNotExist();
+                }
+
+                throw err;
+            });
+
+        for (const payload of dto.pinouts) {
+            const pinout = await this.createPinout(payload, dto.id);
+            arduinoDto.pinouts.push(pinout);
+        }
+
+        return arduinoDto;
+    }
+
+    // async allPinoutsForId(arduinoConfigurationId: number): Promise<PinoutDto[]> {
+    //     return this.prismaService.pinout.findMany({
+    //         where: { arduinoConfigurationId }
+    //     }).then(res => res.map(ele => new PinoutDto(ele)));
+    // }
+
+
+    async removePinoutsForId(arduinoConfigurationId: number) {
+        return this.prismaService.pinout.deleteMany({ where: { arduinoConfigurationId } });
     }
 
     async all() {

@@ -1,0 +1,14 @@
+PUT http://localhost:3000/api/arduino
+Content-Type: application/json
+
+{
+  "id": 2,
+  "name": "ARDUINO_CONFIG_1",
+  "serialport": "/dev/ttyACM0",
+  "pinouts": [
+    {
+      "valvePin": 1,
+      "sensorPin": 1
+    }
+  ]
+}
