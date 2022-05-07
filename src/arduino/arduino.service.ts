@@ -94,6 +94,17 @@ export class ArduinoService {
         return this.prismaService.pinout.deleteMany({ where: { arduinoConfigurationId } });
     }
 
+    async remove(id: number) {
+        return this.prismaService.arduinoConfiguration.delete({ where: { id } })
+            .catch(err => {
+                if (ArduinoConfigurationWithThatIdDoesNotExist.isInstanceOf(err)) {
+                    throw new ArduinoConfigurationWithThatIdDoesNotExist();
+                }
+
+                throw err;
+            });
+    }
+
     async all() {
         const result = await this.prismaService.arduinoConfiguration.findMany({});
 
