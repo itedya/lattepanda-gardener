@@ -1,4 +1,4 @@
-import {ArduinoConfigurationDto} from "../arduino/dtos/arduino-configuration.dto";
+import {ArduinoConfigurationDto} from "../arduino-configuration/dtos/arduino-configuration.dto";
 
 export interface DatabaseFileInterface {
     arduinoConfigurations: ArduinoConfigurationDto[];
