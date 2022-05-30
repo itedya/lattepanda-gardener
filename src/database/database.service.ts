@@ -5,7 +5,7 @@ import * as path from "path";
 
 @Injectable()
 export class DatabaseService {
-    private db: Low;
+    private db: Low<DatabaseFileInterface>;
 
     async onApplicationBootstrap() {
         const dbFilePath = path.join(__dirname, "database.json");
@@ -17,7 +17,7 @@ export class DatabaseService {
         this.db.data ||= {arduinoConfigurations: []}
     }
 
-    public getDatabase(): Low {
+    public getDatabase(): Low<DatabaseFileInterface> {
         return this.db;
     }
 }
