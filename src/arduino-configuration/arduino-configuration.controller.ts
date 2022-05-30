@@ -1,6 +1,6 @@
 import {Controller} from "@nestjs/common";
 
-@Controller("arduino-configurations")
+@Controller("/api/arduino-configurations")
 export class ArduinoConfigurationController {
 
 }
