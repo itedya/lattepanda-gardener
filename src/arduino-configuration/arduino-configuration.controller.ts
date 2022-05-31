@@ -1,7 +1,8 @@
-import {Body, Controller, Post} from "@nestjs/common";
+import {Body, Controller, Get, Post, Query} from "@nestjs/common";
 import {CreateArduinoConfigurationDto} from "./dtos/create-arduino-configuration.dto";
 import {ArduinoConfigurationService} from "./arduino-configuration.service";
 import {ArduinoConfigurationDto} from "./dtos/arduino-configuration.dto";
+import {GetArduinoConfigurationRequestParamsDto} from "./dtos/get-arduino-configuration-request-params.dto";
 
 @Controller("/api/arduino-configurations")
 export class ArduinoConfigurationController {
@@ -11,5 +12,14 @@ export class ArduinoConfigurationController {
     @Post("/")
     async create(@Body() createDto: CreateArduinoConfigurationDto): Promise<ArduinoConfigurationDto> {
         return this.arduinoConfigurationService.create(createDto);
+    }
+
+    @Get("/")
+    async get(@Query() queryParams: GetArduinoConfigurationRequestParamsDto) {
+        if (queryParams.uuid) {
+            return this.arduinoConfigurationService.firstByUuid(queryParams.uuid);
+        }
+
+        return this.arduinoConfigurationService.all();
     }
 }

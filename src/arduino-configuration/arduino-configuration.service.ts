@@ -27,9 +27,19 @@ export class ArduinoConfigurationService {
         });
     }
 
-    firstByPath(path: string) {
+    firstByPath(path: string): undefined | ArduinoConfigurationDto {
         return this.databaseService.db.data.arduinoConfigurations.find(ele => {
             return ele.path === path;
         });
+    }
+
+    firstByUuid(uuid: string): undefined | ArduinoConfigurationDto {
+        return this.databaseService.db.data.arduinoConfigurations.find(ele => {
+            return ele.uuid === uuid;
+        });
+    }
+
+    all(): ArduinoConfigurationDto[] {
+        return this.databaseService.db.data.arduinoConfigurations;
     }
 }
