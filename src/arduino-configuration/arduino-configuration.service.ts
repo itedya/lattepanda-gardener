@@ -11,13 +11,25 @@ export class ArduinoConfigurationService {
     }
 
     async create(createDto: CreateArduinoConfigurationDto): Promise<ArduinoConfigurationDto> {
-        const db = this.databaseService.getDatabase();
-
         const dto = new ArduinoConfigurationDto(classToPlain(createDto));
 
-        db.data.arduinoConfigurations.push(dto);
-        await db.write();
+        dto.uuid = uuidv4();
+
+        this.databaseService.db.data.arduinoConfigurations.push(dto);
+        await this.databaseService.db.write();
 
         return dto;
+    }
+
+    firstByName(name: string): undefined | ArduinoConfigurationDto {
+        return this.databaseService.db.data.arduinoConfigurations.find(ele => {
+            return ele.name === name;
+        });
+    }
+
+    firstByPath(path: string) {
+        return this.databaseService.db.data.arduinoConfigurations.find(ele => {
+            return ele.path === path;
+        });
     }
 }
