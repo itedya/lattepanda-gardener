@@ -1,0 +1,8 @@
+POST http://localhost/api/arduino-configurations
+Content-Type: application/json
+
+{
+  "name": "Nazwa1234",
+  "path": "COM1",
+  "serialports": []
+}
