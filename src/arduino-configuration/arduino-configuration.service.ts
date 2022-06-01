@@ -4,6 +4,7 @@ import {DatabaseService} from "../database/database.service";
 import {CreateArduinoConfigurationDto} from "./dtos/create-arduino-configuration.dto";
 import {ArduinoConfigurationDto} from "./dtos/arduino-configuration.dto";
 import {classToPlain} from "class-transformer";
+import {UpdateArduinoConfigurationDto} from "./dtos/update-arduino-configuration.dto";
 
 @Injectable()
 export class ArduinoConfigurationService {
@@ -41,5 +42,13 @@ export class ArduinoConfigurationService {
 
     all(): ArduinoConfigurationDto[] {
         return this.databaseService.db.data.arduinoConfigurations;
+    }
+
+    update(dto: UpdateArduinoConfigurationDto) {
+        const indexOf = this.databaseService.db.data.arduinoConfigurations.findIndex(ele => {
+            return ele.uuid === dto.uuid;
+        });
+
+        this.databaseService.db.data.arduinoConfigurations[indexOf] = dto;
     }
 }

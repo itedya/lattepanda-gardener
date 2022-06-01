@@ -4,6 +4,7 @@ import {ArduinoConfigurationService} from "./arduino-configuration.service";
 import {DatabaseModule} from "../database/database.module";
 import {IsArduinoConfigurationNameUnique} from "./validators/is-arduino-configuration-name-unique.validator";
 import {IsArduinoConfigurationPathUnique} from "./validators/is-arduino-configuration-path-unique.validator";
+import {DoesArduinoConfigurationUuidExist} from "./validators/does-arduino-configuration-uuid-exist.validator";
 
 @Module({
     imports: [DatabaseModule],
@@ -11,6 +12,7 @@ import {IsArduinoConfigurationPathUnique} from "./validators/is-arduino-configur
     providers: [
         IsArduinoConfigurationNameUnique,
         IsArduinoConfigurationPathUnique,
+        DoesArduinoConfigurationUuidExist,
         ArduinoConfigurationService,
     ],
     exports: [ArduinoConfigurationService]

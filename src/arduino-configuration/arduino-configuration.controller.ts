@@ -1,8 +1,9 @@
-import {Body, Controller, Get, Post, Query} from "@nestjs/common";
+import {Body, Controller, Get, Post, Put, Query} from "@nestjs/common";
 import {CreateArduinoConfigurationDto} from "./dtos/create-arduino-configuration.dto";
 import {ArduinoConfigurationService} from "./arduino-configuration.service";
 import {ArduinoConfigurationDto} from "./dtos/arduino-configuration.dto";
 import {GetArduinoConfigurationRequestParamsDto} from "./dtos/get-arduino-configuration-request-params.dto";
+import {UpdateArduinoConfigurationDto} from "./dtos/update-arduino-configuration.dto";
 
 @Controller("/api/arduino-configurations")
 export class ArduinoConfigurationController {
@@ -21,5 +22,10 @@ export class ArduinoConfigurationController {
         }
 
         return this.arduinoConfigurationService.all();
+    }
+
+    @Put("/")
+    update(@Body() updateDto: UpdateArduinoConfigurationDto) {
+        this.arduinoConfigurationService.update(updateDto);
     }
 }
