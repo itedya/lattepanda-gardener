@@ -1,0 +1,2 @@
+DELETE http://localhost/api/arduino-configurations?uuid=a27f76ae-60a9-40d8-9298-184147e303ff
+Content-Type: application/json

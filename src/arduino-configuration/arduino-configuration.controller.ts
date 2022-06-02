@@ -1,9 +1,10 @@
-import {Body, Controller, Get, Post, Put, Query} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Post, Put, Query} from "@nestjs/common";
 import {CreateArduinoConfigurationDto} from "./dtos/create-arduino-configuration.dto";
 import {ArduinoConfigurationService} from "./arduino-configuration.service";
 import {ArduinoConfigurationDto} from "./dtos/arduino-configuration.dto";
 import {GetArduinoConfigurationRequestParamsDto} from "./dtos/get-arduino-configuration-request-params.dto";
 import {UpdateArduinoConfigurationDto} from "./dtos/update-arduino-configuration.dto";
+import {RemoveArduinoConfigurationRequestParamsDto} from "./dtos/remove-arduino-configuration-request-params.dto";
 
 @Controller("/api/arduino-configurations")
 export class ArduinoConfigurationController {
@@ -27,5 +28,10 @@ export class ArduinoConfigurationController {
     @Put("/")
     async update(@Body() updateDto: UpdateArduinoConfigurationDto) {
         await this.arduinoConfigurationService.update(updateDto);
+    }
+
+    @Delete("/")
+    async remove(@Query() queryParams: RemoveArduinoConfigurationRequestParamsDto) {
+        await this.arduinoConfigurationService.remove(queryParams.uuid);
     }
 }

@@ -53,4 +53,14 @@ export class ArduinoConfigurationService {
 
         await this.databaseService.db.write();
     }
+
+    async remove(uuid: string) {
+        const indexOf = this.databaseService.db.data.arduinoConfigurations.findIndex(ele => {
+            return ele.uuid === uuid;
+        });
+
+        this.databaseService.db.data.arduinoConfigurations.splice(indexOf, 1);
+
+        await this.databaseService.db.write();
+    }
 }
