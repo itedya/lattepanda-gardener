@@ -5,13 +5,26 @@ import {
 } from "class-validator";
 import {ArduinoConfigurationService} from "../arduino-configuration.service";
 
-@ValidatorConstraint({name: "IsArduinoConfigurationNameUnique", async: true})
+@ValidatorConstraint({async: true})
 export class IsArduinoConfigurationNameUnique implements ValidatorConstraintInterface {
     constructor(private arduinoConfigurationService: ArduinoConfigurationService) {
     }
 
     async validate(value: any, validationArguments?: ValidationArguments): Promise<boolean> {
-        return this.arduinoConfigurationService.firstByName(value) === undefined;
+        const searched = this.arduinoConfigurationService.firstByName(value);
+
+        const constraints = validationArguments.constraints;
+
+        const updateSwitch = (constraints !== undefined && constraints.length == 1) ? constraints[0] : false;
+
+        if (updateSwitch) {
+            if (searched === undefined) return true;
+            console.log(searched, validationArguments.object["uuid"]);
+
+            return searched.uuid === validationArguments.object["uuid"];
+        }
+
+        return searched === undefined;
     }
 
     defaultMessage(validationArguments?: ValidationArguments): string {

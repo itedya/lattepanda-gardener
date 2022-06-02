@@ -25,7 +25,7 @@ export class ArduinoConfigurationController {
     }
 
     @Put("/")
-    update(@Body() updateDto: UpdateArduinoConfigurationDto) {
-        this.arduinoConfigurationService.update(updateDto);
+    async update(@Body() updateDto: UpdateArduinoConfigurationDto) {
+        await this.arduinoConfigurationService.update(updateDto);
     }
 }

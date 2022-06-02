@@ -11,7 +11,20 @@ export class IsArduinoConfigurationPathUnique implements ValidatorConstraintInte
     }
 
     async validate(value: any, validationArguments?: ValidationArguments): Promise<boolean> {
-        return this.arduinoConfigurationService.firstByPath(value) === undefined;
+        const searched = this.arduinoConfigurationService.firstByPath(value);
+
+        const constraints = validationArguments.constraints;
+
+        const updateSwitch = (constraints !== undefined && constraints.length == 1) ? validationArguments.constraints[0] : false;
+
+        if (updateSwitch) {
+            if (searched === undefined) return true;
+            console.log(searched, validationArguments.object["uuid"]);
+
+            return searched.uuid === validationArguments.object["uuid"];
+        }
+
+        return searched === undefined;
     }
 
     defaultMessage(validationArguments?: ValidationArguments): string {

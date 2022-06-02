@@ -44,11 +44,13 @@ export class ArduinoConfigurationService {
         return this.databaseService.db.data.arduinoConfigurations;
     }
 
-    update(dto: UpdateArduinoConfigurationDto) {
+    async update(dto: UpdateArduinoConfigurationDto): Promise<void> {
         const indexOf = this.databaseService.db.data.arduinoConfigurations.findIndex(ele => {
             return ele.uuid === dto.uuid;
         });
 
         this.databaseService.db.data.arduinoConfigurations[indexOf] = dto;
+
+        await this.databaseService.db.write();
     }
 }
